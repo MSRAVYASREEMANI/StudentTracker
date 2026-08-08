@@ -1197,12 +1197,10 @@ function genId(prefix){ return prefix + '_' + Date.now().toString(36) + '_' + Ma
 const firebaseConfig = {
   apiKey: "AIzaSyBVlTPXyQx3w4NlUpuP5YVb1SbXBQNHmdc",
   authDomain: "student-tracker-b44af.firebaseapp.com",
-  databaseURL: "https://student-tracker-b44af-default-rtdb.firebaseio.com",
   projectId: "student-tracker-b44af",
   storageBucket: "student-tracker-b44af.firebasestorage.app",
   messagingSenderId: "1000116818047",
-  appId: "1:1000116818047:web:fd55b6a8e8a44411726f4a",
-  measurementId: "G-KBG4VVXG69"
+  appId: "1:1000116818047:web:fd55b6a8e8a44411726f4a"
 };
 let firebaseEnabled = false;
 let fdb = null;
@@ -4113,7 +4111,6 @@ document.getElementById('signupBtn').addEventListener('click', async ()=>{
 
   const usernameKey = usernameKeyOf(username);
   if(findUserRecord(usernameKey)){ errEl.textContent = 'That username is already taken on this device. Try another, or log in instead.'; return; }
-  const isFirstUser = getUsersDirectory().length === 0;
 
   try{
     const saltPassword = randomBytes(16);
@@ -4137,35 +4134,16 @@ document.getElementById('signupBtn').addEventListener('click', async ()=>{
     currentUsernameDisplay = username;
     vaultCryptoKey = key;
 
-    // Only the very first account on this device keeps the pre-built demo content.
-    // Everyone who signs up after that starts with a clean slate.
-    if(isFirstUser){
-      vaultData = {
-        college_v1: JSON.parse(JSON.stringify({times:collegeTimesDefault, days:collegeDaysDefault, grid:collegeGridDefault})),
-        personal_v1: JSON.parse(JSON.stringify(personalRowsDefault)),
-        roadmap_phases_v1: JSON.parse(JSON.stringify(DEFAULT_ROADMAP_PHASES)),
-        syllabus_subjects_v1: JSON.parse(JSON.stringify(DEFAULT_SYLLABUS_SUBJECTS)),
-        reference_notes_v1: {
-          weekendFocus: "Revision / Assignments — Sat 7:00–8:30 PM\nAptitude Practice — Sat & Sun 9:00–9:30 PM\nPython — Sat & Sun\nSoft Skills — Sat & Sun\nWeekly Planning — Sun 6:30–7:00 PM",
-          softSkills: "Communication Skills\nPublic Speaking\nGroup Discussion (GD)\nInterview Skills\nResume Building\nEmail Writing\nBody Language\nEnglish Speaking",
-          notes: "Be consistent, not perfect.\nNever miss two days in a row.\nCode every day.\nStay hydrated & eat healthy.\nProtect your sleep.\nReview weekly & plan ahead."
-        },
-        staying_current_v1: [
-          {id:genId('link'), label:"Real Python — tutorials & articles", url:"https://realpython.com"},
-          {id:genId('link'), label:"freeCodeCamp — free courses & practice", url:"https://www.freecodecamp.org"},
-          {id:genId('link'), label:"Official Python Docs — always the source of truth", url:"https://docs.python.org/3/"}
-        ]
-      };
-    } else {
-      vaultData = {
-        college_v1: blankCollegeData(),
-        personal_v1: blankPersonalData(),
-        roadmap_phases_v1: [],
-        syllabus_subjects_v1: [],
-        reference_notes_v1: {weekendFocus:"", softSkills:"", notes:""},
-        staying_current_v1: []
-      };
-    }
+    // Every new account starts completely blank — no one inherits anyone else's
+    // schedule, roadmap, syllabus, or notes, on this device or any other.
+    vaultData = {
+      college_v1: blankCollegeData(),
+      personal_v1: blankPersonalData(),
+      roadmap_phases_v1: [],
+      syllabus_subjects_v1: [],
+      reference_notes_v1: {weekendFocus:"", softSkills:"", notes:""},
+      staying_current_v1: []
+    };
     await persistVault();
     await cacheSessionKey(key, usernameKey);
     document.getElementById('appBrandTitle').textContent = username;
