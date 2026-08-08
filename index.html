@@ -16,6 +16,7 @@
   --gold:#D6A34A;
   --teal:#2F7A6F;
   --coral:#C1554B;
+  --card-shadow: 0 1px 3px rgba(20,33,61,0.08);
 
   --c-health:#4C9A6A;
   --c-college:#3667A6;
@@ -29,12 +30,46 @@
   --c-dash:#C7CCC5;
 }
 [data-theme="dark"]{
-  --ink:#E8EAF0;
-  --paper:#12161F;
+  --ink:#EDF0F5;
+  --paper:#0F131C;
   --line-rgb:255,255,255;
-  --card:#1B212C;
-  --muted:#9AA3B5;
-  --c-dash:#3A4150;
+  --card:#1B2230;
+  --muted:#A6AFC2;
+  --gold:#E8B863;
+  --teal:#45A897;
+  --coral:#E0847A;
+  --card-shadow: 0 4px 16px rgba(0,0,0,0.45);
+  --c-dash:#333B4C;
+}
+[data-theme="dark"] body{
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 42px),
+    radial-gradient(circle at 20% 0%, rgba(69,168,151,0.08), transparent 45%),
+    radial-gradient(circle at 85% 100%, rgba(232,184,99,0.06), transparent 45%),
+    var(--paper);
+}
+[data-theme="glass"]{
+  --ink:#1B2338;
+  --paper:#dfe7f0;
+  --line-rgb:27,35,56;
+  --card:rgba(255,255,255,0.55);
+  --muted:#4B5670;
+  --card-shadow: 0 4px 20px rgba(27,35,56,0.12);
+  --c-dash:#C7CCC5;
+}
+[data-theme="glass"] body{
+  background:
+    radial-gradient(circle at 15% 10%, rgba(214,163,74,0.25), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(47,122,111,0.3), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(193,85,75,0.2), transparent 50%),
+    linear-gradient(135deg, #dfe7f0, #c9d6e8);
+  background-attachment: fixed;
+}
+[data-theme="glass"] .card, [data-theme="glass"] .auth-card, [data-theme="glass"] .stat-box, [data-theme="glass"] .info-box{
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border:1px solid rgba(255,255,255,0.4);
 }
 
 *{box-sizing:border-box;}
@@ -101,19 +136,99 @@ body{
 .tabs{display:flex; gap:6px; margin-bottom:22px; flex-wrap:wrap;}
 .tab-btn{
   font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:0.92rem;
-  background:transparent; border:1.5px solid var(--ink); color:var(--ink);
+  background:rgba(var(--line-rgb),0.04); border:1.5px solid var(--ink); color:var(--ink);
   padding:9px 18px; border-radius:2px; cursor:pointer; transition:all .15s ease;
 }
-.tab-btn:hover{background:rgba(var(--line-rgb),0.06);}
-.tab-btn.active{background:var(--ink); color:var(--paper);}
+.tab-btn:hover{background:rgba(var(--line-rgb),0.1);}
+.tab-btn.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
 
-.panel{display:none; animation:fade .25s ease;}
+.panel{display:none; animation:fade .3s ease;}
 .panel.active{display:block;}
-@keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+.subpanel{animation:fade .25s ease;}
+
+#splashScreen{
+  position:fixed; inset:0; z-index:99999; display:flex; align-items:center; justify-content:center;
+  background:#0d1420; transition:opacity .5s ease, visibility .5s ease;
+}
+#splashScreen.hide{opacity:0; visibility:hidden; pointer-events:none;}
+#splashScreen img{width:180px; animation:splash-pop 1s cubic-bezier(.34,1.56,.64,1);}
+@keyframes splash-pop{0%{opacity:0; transform:scale(0.7);} 60%{opacity:1; transform:scale(1.05);} 100%{opacity:1; transform:scale(1);}}
+
+.pop-anim{animation:pop-check .35s ease;}
+@keyframes pop-check{0%{transform:scale(1);} 40%{transform:scale(1.25);} 100%{transform:scale(1);}}
+
+body.tod-morning{--paper:#FFF6E9;}
+body.tod-afternoon{--paper:#EEF1EE;}
+body.tod-evening{--paper:#F1ECEA;}
+body.tod-night{--paper:#E7E9ED;}
+
+.xp-badge{
+  font-family:'IBM Plex Mono',monospace; font-size:0.78rem; font-weight:600; color:var(--gold);
+  background:rgba(214,163,74,0.15); padding:6px 12px; border-radius:20px; white-space:nowrap;
+}
+.xp-bar-track{height:6px; background:rgba(var(--line-rgb),0.1); border-radius:3px; overflow:hidden; width:100%;}
+.xp-bar-fill{height:100%; background:var(--gold); transition:width .4s ease;}
+
+#cmdPalette{
+  position:fixed; inset:0; z-index:9998; display:none; align-items:flex-start; justify-content:center;
+  padding-top:12vh; background:rgba(0,0,0,0.45);
+}
+#cmdPalette.show{display:flex;}
+.cmd-box{width:100%; max-width:520px; background:var(--card); border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,0.3); overflow:hidden;}
+.cmd-input{width:100%; padding:16px 18px; border:none; border-bottom:1px solid rgba(var(--line-rgb),0.12); font-size:1rem; font-family:'Inter',sans-serif; background:var(--card); color:var(--ink); outline:none;}
+.cmd-results{max-height:300px; overflow-y:auto;}
+.cmd-item{padding:12px 18px; cursor:pointer; font-size:0.9rem; border-bottom:1px solid rgba(var(--line-rgb),0.06);}
+.cmd-item:hover, .cmd-item.sel{background:rgba(47,122,111,0.1);}
+
+.achievement-card{
+  border:1px solid rgba(var(--line-rgb),0.12); border-radius:6px; padding:16px; text-align:center;
+  background:var(--card); opacity:0.35; filter:grayscale(1);
+}
+.achievement-card.unlocked{opacity:1; filter:none; border-color:var(--gold); box-shadow:0 2px 10px rgba(214,163,74,0.2);}
+.achievement-emoji{font-size:2rem; margin-bottom:6px;}
+.achievement-label{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:0.85rem;}
+.achievement-date{font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--muted); margin-top:4px;}
+.achievements-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px;}
+
+.leaderboard-row{display:flex; align-items:center; gap:12px; padding:10px 8px; border-bottom:1px solid rgba(var(--line-rgb),0.08); font-size:0.9rem;}
+.leaderboard-row.me{background:rgba(214,163,74,0.08); border-radius:4px;}
+.lb-rank{font-family:'IBM Plex Mono',monospace; color:var(--muted); min-width:32px;}
+.lb-name{flex:1; font-weight:600;}
+.lb-level{font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--teal); min-width:50px;}
+.lb-xp{font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--gold); min-width:60px; text-align:right;}
+.lb-streak{font-family:'IBM Plex Mono',monospace; font-size:0.78rem; min-width:50px; text-align:right;}
+
+.board-post{padding:10px 8px; border-bottom:1px solid rgba(var(--line-rgb),0.08); position:relative;}
+.board-post-head{display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; margin-bottom:4px;}
+.board-post-text{font-size:0.9rem;}
+.board-post .del-btn{position:absolute; top:8px; right:4px;}
+
+.shared-phase-item{display:flex; align-items:center; gap:10px; padding:9px 8px; border-bottom:1px solid rgba(var(--line-rgb),0.08); flex-wrap:wrap; font-size:0.88rem;}
+.shared-phase-item span{flex:1; min-width:160px;}
+
+.challenge-item{display:flex; align-items:center; gap:10px; padding:8px 0; font-size:0.9rem;}
+.challenge-item .chk{width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0;}
+.challenge-item.done .chk{background:var(--teal); color:#fff;}
+.challenge-item:not(.done) .chk{border:2px solid var(--muted);}
+.challenge-item.done .challenge-text{text-decoration:line-through; color:var(--muted);}
+
+.agenda-section{margin-bottom:20px;}
+.agenda-section h3{font-family:'Space Grotesk',sans-serif; font-size:0.9rem; color:var(--teal); margin:0 0 8px;}
+.agenda-row{display:flex; gap:10px; padding:6px 0; font-size:0.88rem; border-bottom:1px dashed rgba(var(--line-rgb),0.08);}
+.agenda-time{font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--muted); min-width:110px;}
+
+.review-card{background:linear-gradient(135deg, var(--ink), #2a3a5c); color:#fff; border-radius:10px; padding:28px; text-align:center;}
+.review-card .review-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.3rem; margin-bottom:16px;}
+.review-stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:16px; margin-bottom:10px;}
+.review-stat{background:rgba(255,255,255,0.1); border-radius:6px; padding:14px 8px;}
+.review-stat .num{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.6rem;}
+.review-stat .label{font-family:'IBM Plex Mono',monospace; font-size:0.65rem; opacity:0.8; text-transform:uppercase;}
 
 .card{
   background:var(--card); border:1px solid rgba(var(--line-rgb),0.12); border-radius:4px;
-  padding:20px; margin-bottom:18px; box-shadow:0 1px 2px rgba(var(--line-rgb),0.04);
+  padding:20px; margin-bottom:18px; box-shadow:var(--card-shadow);
+  transition:background .2s ease, border-color .2s ease;
 }
 .card h2{
   font-family:'Space Grotesk',sans-serif; font-size:1.05rem; margin:0 0 14px;
@@ -296,7 +411,7 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
 .subtabs{display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap;}
 .subtab-btn{
   font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:0.85rem;
-  background:transparent; border:1.5px solid var(--teal); color:var(--teal);
+  background:rgba(47,122,111,0.06); border:1.5px solid var(--teal); color:var(--teal);
   padding:7px 15px; border-radius:20px; cursor:pointer; transition:all .15s ease;
 }
 .subtab-btn:hover{background:rgba(47,122,111,0.08);}
@@ -374,6 +489,17 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
 .exam-days.soon{background:rgba(214,163,74,0.2); color:#8a6415;}
 .exam-days.overdue{background:rgba(193,85,75,0.18); color:var(--coral);}
 
+.product-item{display:flex; align-items:center; gap:10px; padding:9px 8px; border-bottom:1px solid rgba(var(--line-rgb),0.08); flex-wrap:wrap;}
+.product-item .product-name{flex:1; min-width:120px; font-weight:600; font-size:0.9rem;}
+.product-item .product-cat{font-family:'IBM Plex Mono',monospace; font-size:0.7rem; color:var(--muted);}
+.status-badge{
+  font-family:'IBM Plex Mono',monospace; font-size:0.68rem; padding:3px 10px; border-radius:20px; cursor:pointer;
+  text-transform:uppercase; letter-spacing:0.03em; white-space:nowrap; border:none;
+}
+.status-Active{background:rgba(76,154,106,0.15); color:var(--c-health);}
+.status-RunningLow{background:rgba(214,163,74,0.2); color:#8a6415;}
+.status-Empty{background:rgba(193,85,75,0.15); color:var(--coral);}
+
 .syllabus-subject{border:1px solid rgba(var(--line-rgb),0.12); border-radius:4px; padding:16px; margin-bottom:16px;}
 .syllabus-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;}
 .syllabus-rank{font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:var(--muted); font-weight:600;}
@@ -394,9 +520,11 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
   .no-print, .tabs, .subtabs, .masthead .datebox, .theme-toggle, button, input, textarea, .del-btn, .icon-btn{display:none !important;}
   body{background:#fff;}
   .card{box-shadow:none; border:1px solid #999;}
-  .panel:not(#panel-roadmap){display:none !important;}
-  #panel-roadmap{display:block !important;}
+  .panel{display:none !important;}
   .subpanel{display:block !important; margin-bottom:24px;}
+  body.print-roadmap #panel-roadmap{display:block !important;}
+  body.print-planner #panel-personal{display:block !important;}
+  body.print-planner #panel-college{display:block !important;}
 }
 
 @media (max-width:640px){
@@ -412,6 +540,17 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
 </style>
 </head>
 <body>
+
+<div id="splashScreen">
+  <img id="splashLogo" src="" alt="Zenora">
+</div>
+
+<div id="cmdPalette">
+  <div class="cmd-box">
+    <input type="text" class="cmd-input" id="cmdInput" placeholder="Type a command or search… (Esc to close)">
+    <div class="cmd-results" id="cmdResults"></div>
+  </div>
+</div>
 
 <div id="authScreen">
   <div class="auth-wrap">
@@ -477,7 +616,9 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
       <h1 id="appBrandTitle">Zenora</h1>
     </div>
     <div class="masthead-right">
-      <button class="theme-toggle no-print" id="themeToggle" title="Toggle dark mode">🌙</button>
+      <span class="xp-badge no-print" id="xpBadge" title="XP">⚡ Lv 1</span>
+      <button class="theme-toggle no-print" id="cmdPaletteBtn" title="Command palette (Ctrl/Cmd+K)">⌘</button>
+      <button class="theme-toggle no-print" id="themeToggle" title="Toggle theme">🌙</button>
       <div class="datebox" id="todayBox">—</div>
       <button class="theme-toggle no-print" id="logoutBtn" title="Log out">🚪</button>
     </div>
@@ -490,6 +631,11 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
     <button class="tab-btn" data-tab="personal">📅 My Schedule</button>
     <button class="tab-btn" data-tab="tasks">✅ Daily Tasks</button>
     <button class="tab-btn" data-tab="roadmap">🎯 Skill Roadmap</button>
+    <button class="tab-btn" data-tab="skincare">🧴 Skincare</button>
+    <button class="tab-btn" data-tab="diet">🥗 Diet Plan</button>
+    <button class="tab-btn" data-tab="agenda">📆 Agenda</button>
+    <button class="tab-btn" data-tab="achievements">🏆 Achievements</button>
+    <button class="tab-btn" data-tab="friends">👥 Friends</button>
   </div>
 
   <!-- COLLEGE -->
@@ -535,6 +681,7 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
       <h2>Weekly Master Schedule <span class="num">click any cell to edit</span></h2>
       <div class="sched-scroll"><table class="sched" id="personalTable"></table></div>
       <div class="legend" id="legendBox"></div>
+      <button class="btn btn-small no-print" id="printPlannerBtn" style="margin-top:14px;">🖨️ Print weekly planner</button>
     </div>
     <div class="card">
       <h2>Today's Checklist <span class="num" id="todayChecklistDate">—</span></h2>
@@ -611,6 +758,17 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
         <div class="reward-row" id="rewardRow"></div>
       </div>
 
+      <div class="card">
+        <h2>Level progress</h2>
+        <div class="xp-bar-track"><div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div></div>
+        <p class="hint" id="xpDetailHint" style="margin-top:8px;"></p>
+      </div>
+
+      <div class="card">
+        <h2>Today's Challenges <span class="num" id="challengeProgressLabel"></span></h2>
+        <div id="challengeList"></div>
+      </div>
+
       <div class="card spotlight-card">
         <h2>Up next</h2>
         <div id="spotlightBox"></div>
@@ -671,6 +829,20 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
 
     <!-- STATS -->
     <div class="subpanel" id="subpanel-stats">
+      <div class="card">
+        <h2>🎉 Year in Review</h2>
+        <div class="review-card" id="reviewCard">
+          <div class="review-title">Zenora — Your Journey So Far</div>
+          <div class="review-stat-grid" id="reviewStatGrid"></div>
+        </div>
+        <div class="log-row no-print" style="margin-top:12px;">
+          <button class="btn btn-small" id="downloadReviewBtn">Download as image</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Insight</h2>
+        <p id="correlationInsight" class="hint"></p>
+      </div>
       <div class="card">
         <h2>This week's digest</h2>
         <div class="info-grid" id="weeklyDigest"></div>
@@ -744,11 +916,174 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
     </div>
   </div>
 
+  <!-- SKINCARE -->
+  <div class="panel" id="panel-skincare">
+    <div class="card">
+      <h2>Routine <span class="num" id="skincareStreakLabel"></span></h2>
+      <div class="stat-row" style="margin-bottom:16px;">
+        <div class="stat-box">
+          <div class="stat-num" id="statSkincareStreak">—</div>
+          <div class="stat-label">Day streak</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statSkincareToday">—</div>
+          <div class="stat-label">Today's completion</div>
+        </div>
+      </div>
+      <div class="syllabus-subgroup-title">AM Routine</div>
+      <ul class="checklist" id="skincareAmList"></ul>
+      <div class="add-subtopic-row">
+        <input type="text" placeholder="Add an AM step…" id="newAmStepInput">
+        <button class="icon-btn add" id="addAmStepBtn">+ Add</button>
+      </div>
+      <div class="syllabus-subgroup-title" style="margin-top:18px;">PM Routine</div>
+      <ul class="checklist" id="skincarePmList"></ul>
+      <div class="add-subtopic-row">
+        <input type="text" placeholder="Add a PM step…" id="newPmStepInput">
+        <button class="icon-btn add" id="addPmStepBtn">+ Add</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Product Inventory</h2>
+      <div class="log-row">
+        <input type="text" id="newProductName" placeholder="Product name" style="flex:1; min-width:140px;">
+        <select id="newProductCategory">
+          <option>Cleanser</option><option>Toner</option><option>Serum</option>
+          <option>Moisturizer</option><option>Sunscreen</option><option>Mask</option><option>Other</option>
+        </select>
+        <button class="btn btn-small" id="addProductBtn">+ Add product</button>
+      </div>
+      <div id="productList" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- DIET PLAN -->
+  <div class="panel" id="panel-diet">
+    <div class="card">
+      <h2>Weekly Meal Plan <span class="num">click any cell to edit</span></h2>
+      <div class="sched-scroll"><table class="sched" id="dietTable"></table></div>
+    </div>
+    <div class="card">
+      <h2>Today's Meals <span class="num" id="dietChecklistDate">—</span></h2>
+      <div class="checklist-progress" id="dietChecklistProgress" style="margin-bottom:8px;"></div>
+      <ul class="checklist" id="dietChecklist"></ul>
+      <textarea class="notes-area" id="dietNotesInput" placeholder="Notes for today — cravings, cheat meal, extra protein, etc."></textarea>
+      <div class="log-row" style="margin-top:8px;">
+        <button class="btn btn-small" id="saveDietNotesBtn">Save notes</button>
+        <span class="hint" id="savedDietNotesHint"></span>
+        <button class="btn btn-small no-print" id="resetTodayDietBtn" style="background:transparent; color:var(--coral); border:1px solid var(--coral);">Reset today</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGENDA -->
+  <div class="panel" id="panel-agenda">
+    <div class="card">
+      <h2>Today's Agenda <span class="num" id="agendaDate">—</span></h2>
+      <div id="agendaContent"></div>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="panel" id="panel-achievements">
+    <div class="card">
+      <h2>Achievements <span class="num">unlock these by staying consistent</span></h2>
+      <div class="achievements-grid" id="achievementsGrid"></div>
+    </div>
+  </div>
+
+  <!-- FRIENDS -->
+  <div class="panel" id="panel-friends">
+    <div class="card" id="firebaseSetupNote" style="border:1.5px dashed var(--coral); background:rgba(193,85,75,0.06);">
+      <h2>⚠️ Friends needs a one-time setup</h2>
+      <p class="hint" style="line-height:1.7;">
+        This is the one part of Zenora that needs a real backend, since friends have to reach each other across separate devices.
+        1) Go to <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> and create a free project.
+        2) In the project: Build → Firestore Database → Create Database → start in <strong>test mode</strong>.
+        3) Project Settings (gear icon) → General → "Your apps" → click the web icon (&lt;/&gt;) → register an app → copy the <code>firebaseConfig</code> object shown.
+        4) Open this file's HTML, find <code>const firebaseConfig = { ... }</code> near the top of the script, and paste your real values in over the placeholders.
+        5) Save and re-upload to your site. This card will disappear once it's working.
+      </p>
+      <p class="hint" id="firebaseErrorDetail" style="color:var(--coral); font-weight:600; margin-top:10px; display:none;"></p>
+    </div>
+    <div class="card">
+      <h2>Add a Friend</h2>
+      <div class="log-row">
+        <input type="text" id="addFriendInput" placeholder="Their username" style="flex:1; min-width:160px;">
+        <button class="btn btn-small" id="sendFriendRequestBtn">Send request</button>
+      </div>
+      <p class="hint" id="addFriendHint" style="margin-top:6px;"></p>
+    </div>
+    <div class="card">
+      <h2>Pending Requests</h2>
+      <div id="pendingRequestsList"></div>
+    </div>
+    <div class="card">
+      <h2>Leaderboard <span class="num">you and your accepted friends</span></h2>
+      <div id="leaderboardList"></div>
+    </div>
+    <div class="card">
+      <h2>Shared Board <span class="num">visible to friends only</span></h2>
+      <div class="log-row">
+        <input type="text" id="boardPostInput" placeholder="Say something to your friends…" style="flex:1; min-width:200px;">
+        <button class="btn btn-small" id="postBoardBtn">Post</button>
+      </div>
+      <div id="sharedBoardList" style="margin-top:12px;"></div>
+    </div>
+    <div class="card">
+      <h2>Share a Roadmap Phase</h2>
+      <p class="hint" style="margin-bottom:8px;">Give a friend a head start — share one of your phases so they can add it straight to their own roadmap.</p>
+      <div class="log-row">
+        <select id="sharePhaseSelect" style="flex:1; min-width:180px;"></select>
+        <button class="btn btn-small" id="sharePhaseBtn">Share this phase</button>
+      </div>
+      <p class="hint" id="sharePhaseHint" style="color:var(--teal);"></p>
+      <div class="syllabus-subgroup-title" style="margin-top:16px;">Shared with you</div>
+      <div id="sharedPhasesList"></div>
+    </div>
+
+    <div class="card" id="collabInvitesCard">
+      <h2>Roadmap Invites <span class="num">collaborative roadmaps shared with you</span></h2>
+      <div id="collabInvitesList"></div>
+    </div>
+    <div id="collabListSection">
+      <div class="card">
+        <h2>Collaborative Roadmaps <span class="num">build one together, live, with accepted friends</span></h2>
+        <p class="hint" style="margin-bottom:8px;">
+          This is a separate roadmap from your own — it isn't stored in your private vault. Every member you invite (and who
+          accepts) can view and edit it together from their own device, in real time.
+        </p>
+        <div class="log-row">
+          <input type="text" id="newCollabRoadmapInput" placeholder="New collaborative roadmap name" style="flex:1; min-width:200px;">
+          <button class="btn btn-small" id="newCollabRoadmapBtn">+ Create</button>
+        </div>
+        <p class="hint" id="collabRoadmapHint" style="color:var(--teal);"></p>
+        <div id="collabRoadmapsList" style="margin-top:10px;"></div>
+      </div>
+    </div>
+    <div class="card" id="collabDetailSection" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <button class="btn btn-small" id="collabBackBtn">← Back to Collaborative Roadmaps</button>
+        <span class="hint" id="collabMembersLine"></span>
+      </div>
+      <h2 id="collabDetailTitle" contenteditable="true" style="outline:none;"></h2>
+      <div class="roadmap-form">
+        <input type="text" id="collabNewPhaseInput" placeholder="New phase name">
+        <button class="btn btn-small" id="collabAddPhaseBtn">+ Add Phase</button>
+      </div>
+      <div id="collabRoadmapContainer"></div>
+    </div>
+  </div>
+
   <footer class="note">Everything on this page saves automatically. Aim for progress, not perfection.</footer>
 </div>
 </div>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 /* =================================================================
    ENCRYPTED VAULT (Web Crypto: PBKDF2 + AES-GCM)
@@ -756,6 +1091,8 @@ footer.note{margin-top:26px; text-align:center; font-family:'IBM Plex Mono',mono
    re-encrypted to localStorage on every save. loadData/saveData keep
    the exact same signatures the rest of the app already uses.
    ================================================================= */
+document.documentElement.setAttribute('data-theme', 'dark');
+
 const STORAGE_PREFIX = 'command-log:';
 const USERS_KEY = STORAGE_PREFIX + 'users'; // directory of all accounts on this device
 const SESSION_KEY_NAME = STORAGE_PREFIX + 'session'; // {usernameKey, rawKeyB64}
@@ -848,6 +1185,656 @@ async function saveData(key, val){
 }
 
 function genId(prefix){ return prefix + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7); }
+
+/* ================= FRIENDS (cross-device, Firebase Firestore) =================
+   The encrypted vault stays 100% local per device — this section is the one
+   deliberate exception: username, XP, level, streak, friend requests, shared
+   board posts, and shared roadmap phases go through Firestore so friends on
+   their OWN devices with their OWN accounts can find each other and share.
+   Note: this uses username as identity, not Firebase Auth, so it trusts that
+   your friends are who they say they are — good for real friends, not proof
+   against someone else guessing a username. ================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBVlTPXyQx3w4NlUpuP5YVb1SbXBQNHmdc",
+  authDomain: "student-tracker-b44af.firebaseapp.com",
+  projectId: "student-tracker-b44af",
+  storageBucket: "student-tracker-b44af.firebasestorage.app",
+  messagingSenderId: "1000116818047",
+  appId: "1:1000116818047:web:fd55b6a8e8a44411726f4a"
+};
+let firebaseEnabled = false;
+let fdb = null;
+let firebaseInitError = null;
+try{
+  if(firebaseConfig.apiKey !== "YOUR_API_KEY" && typeof firebase !== 'undefined'){
+    firebase.initializeApp(firebaseConfig);
+    fdb = firebase.firestore();
+    firebaseEnabled = true;
+  } else if(typeof firebase === 'undefined'){
+    firebaseInitError = "The Firebase SDK script didn't load — either you're viewing this in a preview that blocks external scripts, or there's no internet connection. Try it on your actual deployed site.";
+  }
+}catch(e){ console.error('Firebase init failed', e); firebaseInitError = e.message; }
+
+async function testFirebaseConnection(){
+  if(!firebaseEnabled) return;
+  try{
+    await fdb.collection('_connection_test').doc('ping').get();
+  }catch(e){
+    firebaseEnabled = false;
+    firebaseInitError = e.message || String(e);
+    console.error('Firestore connection test failed', e);
+  }
+}
+
+async function registerMyPresence(){
+  if(!firebaseEnabled || !currentUsernameKey) return;
+  try{
+    await fdb.collection('users').doc(currentUsernameKey).set({
+      username: currentUsernameDisplay,
+      xp: totalXP,
+      level: levelForXP(totalXP),
+      streak: computeStreak(),
+      lastActive: new Date().toISOString()
+    }, {merge:true});
+  }catch(e){ console.error('presence update failed', e); }
+}
+async function updateMyPublicProfile(){ await registerMyPresence(); }
+
+async function getMyFriendsList(){
+  if(!firebaseEnabled || !currentUsernameKey) return [];
+  try{
+    const doc = await fdb.collection('users').doc(currentUsernameKey).get();
+    return (doc.exists && doc.data().friends) ? doc.data().friends : [];
+  }catch(e){ return []; }
+}
+
+document.getElementById('sendFriendRequestBtn').addEventListener('click', async ()=>{
+  const hint = document.getElementById('addFriendHint');
+  hint.textContent = '';
+  if(!firebaseEnabled){ hint.textContent = 'Friends needs Firebase set up first — see the setup card below.'; return; }
+  const targetName = document.getElementById('addFriendInput').value.trim();
+  if(!targetName){ return; }
+  const targetKey = usernameKeyOf(targetName);
+  if(targetKey === currentUsernameKey){ hint.textContent = "That's you!"; return; }
+  try{
+    const targetDoc = await fdb.collection('users').doc(targetKey).get();
+    if(!targetDoc.exists){ hint.textContent = `No one named "${targetName}" has used Zenora yet.`; return; }
+    await fdb.collection('friend_requests').add({
+      fromKey: currentUsernameKey, fromName: currentUsernameDisplay,
+      toKey: targetKey, toName: targetDoc.data().username,
+      status: 'pending', timestamp: new Date().toISOString()
+    });
+    hint.style.color = 'var(--teal)';
+    hint.textContent = `Request sent to ${targetDoc.data().username} ✓`;
+    document.getElementById('addFriendInput').value = '';
+  }catch(e){ console.error(e); hint.textContent = 'Something went wrong sending that request.'; }
+});
+
+async function renderPendingRequests(){
+  const el = document.getElementById('pendingRequestsList');
+  if(!el || !firebaseEnabled || !currentUsernameKey) { if(el) el.innerHTML=''; return; }
+  try{
+    const snap = await fdb.collection('friend_requests')
+      .where('toKey','==',currentUsernameKey).where('status','==','pending').get();
+    if(snap.empty){ el.innerHTML = '<p class="hint">No pending requests.</p>'; return; }
+    el.innerHTML = snap.docs.map(d=>{
+      const r = d.data();
+      return `<div class="shared-phase-item" data-id="${d.id}">
+        <span><strong>${r.fromName}</strong> wants to be friends</span>
+        <button class="btn btn-small" data-accept="${d.id}" data-from="${r.fromKey}">Accept</button>
+        <button class="icon-btn" data-decline="${d.id}" title="Decline">✕</button>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-accept]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const reqId = btn.dataset.accept, fromKey = btn.dataset.from;
+        await fdb.collection('friend_requests').doc(reqId).update({status:'accepted'});
+        await fdb.collection('users').doc(currentUsernameKey).set(
+          {friends: firebase.firestore.FieldValue.arrayUnion(fromKey)}, {merge:true});
+        await fdb.collection('users').doc(fromKey).set(
+          {friends: firebase.firestore.FieldValue.arrayUnion(currentUsernameKey)}, {merge:true});
+        renderFriendsTab();
+      });
+    });
+    el.querySelectorAll('[data-decline]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        await fdb.collection('friend_requests').doc(btn.dataset.decline).update({status:'declined'});
+        renderPendingRequests();
+      });
+    });
+  }catch(e){ console.error(e); el.innerHTML = '<p class="hint">Could not load requests.</p>'; }
+}
+
+async function renderLeaderboard(){
+  const el = document.getElementById('leaderboardList');
+  if(!el) return;
+  if(!firebaseEnabled){ el.innerHTML = '<p class="hint">Set up Firebase below to see friends across devices.</p>'; return; }
+  const friendKeys = await getMyFriendsList();
+  const allKeys = [...friendKeys, currentUsernameKey];
+  try{
+    const docs = await Promise.all(allKeys.map(k=>fdb.collection('users').doc(k).get()));
+    const list = docs.filter(d=>d.exists).map(d=>d.data()).sort((a,b)=> b.xp-a.xp);
+    if(list.length===0){ el.innerHTML = '<p class="hint">Add friends above to build your leaderboard.</p>'; return; }
+    el.innerHTML = list.map((p,i)=>{
+      const isMe = p.username===currentUsernameDisplay;
+      return `<div class="leaderboard-row ${isMe?'me':''}">
+        <span class="lb-rank">#${i+1}</span>
+        <span class="lb-name">${p.username}${isMe?' (you)':''}</span>
+        <span class="lb-level">Lv ${p.level}</span>
+        <span class="lb-xp">${p.xp} XP</span>
+        <span class="lb-streak">🔥 ${p.streak}</span>
+      </div>`;
+    }).join('');
+  }catch(e){ console.error(e); el.innerHTML = '<p class="hint">Could not load leaderboard.</p>'; }
+}
+
+async function renderSharedBoard(){
+  const el = document.getElementById('sharedBoardList');
+  if(!el) return;
+  if(!firebaseEnabled){ el.innerHTML = ''; return; }
+  const friendKeys = await getMyFriendsList();
+  const visibleKeys = [...friendKeys, currentUsernameKey].slice(0,30);
+  if(visibleKeys.length===0){ el.innerHTML = '<div class="empty-state">Add friends to see posts here.</div>'; return; }
+  try{
+    const snap = await fdb.collection('shared_board').where('usernameKey','in',visibleKeys).get();
+    const posts = snap.docs.map(d=>({id:d.id, ...d.data()})).sort((a,b)=> new Date(b.timestamp)-new Date(a.timestamp));
+    if(posts.length===0){ el.innerHTML = '<div class="empty-state">No posts yet — say hi to your friends!</div>'; return; }
+    el.innerHTML = posts.map(p=>`
+      <div class="board-post" data-id="${p.id}">
+        <div class="board-post-head"><strong>${p.username}</strong><span class="hint">${new Date(p.timestamp).toLocaleString()}</span></div>
+        <div class="board-post-text">${p.text}</div>
+        ${p.usernameKey===currentUsernameKey ? '<button class="del-btn" title="Delete">✕</button>' : ''}
+      </div>
+    `).join('');
+    el.querySelectorAll('.del-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        await fdb.collection('shared_board').doc(btn.closest('.board-post').dataset.id).delete();
+        renderSharedBoard();
+      });
+    });
+  }catch(e){ console.error(e); el.innerHTML = '<p class="hint">Could not load the board.</p>'; }
+}
+document.getElementById('postBoardBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('boardPostInput');
+  const text = input.value.trim();
+  if(!text || !currentUsernameKey || !firebaseEnabled) return;
+  try{
+    await fdb.collection('shared_board').add({
+      usernameKey:currentUsernameKey, username:currentUsernameDisplay, text, timestamp:new Date().toISOString()
+    });
+    input.value = '';
+    renderSharedBoard();
+  }catch(e){ console.error(e); }
+});
+
+function refreshSharePhaseOptions(){
+  const sel = document.getElementById('sharePhaseSelect');
+  if(!sel) return;
+  sel.innerHTML = roadmapPhases.map(p=>`<option value="${p.id}">${p.title}</option>`).join('') || '<option value="">No phases to share</option>';
+}
+document.getElementById('sharePhaseBtn').addEventListener('click', async ()=>{
+  const hint = document.getElementById('sharePhaseHint');
+  if(!firebaseEnabled){ hint.textContent = 'Set up Firebase first.'; return; }
+  const phaseId = document.getElementById('sharePhaseSelect').value;
+  const phase = roadmapPhases.find(p=>p.id===phaseId);
+  if(!phase){ hint.textContent = 'Nothing to share yet.'; return; }
+  try{
+    await fdb.collection('shared_phases').add({
+      fromKey: currentUsernameKey, fromName: currentUsernameDisplay,
+      phase: JSON.parse(JSON.stringify(phase)), timestamp: new Date().toISOString()
+    });
+    hint.style.color = 'var(--teal)';
+    hint.textContent = `Shared "${phase.title}" with friends ✓`;
+    setTimeout(()=> hint.textContent='', 2500);
+    renderSharedPhases();
+  }catch(e){ console.error(e); hint.textContent = 'Something went wrong sharing that.'; }
+});
+async function renderSharedPhases(){
+  const el = document.getElementById('sharedPhasesList');
+  if(!el) return;
+  if(!firebaseEnabled){ el.innerHTML = ''; return; }
+  const friendKeys = await getMyFriendsList();
+  const visibleKeys = [...friendKeys, currentUsernameKey].slice(0,30);
+  if(visibleKeys.length===0){ el.innerHTML = '<p class="hint">Add friends to see shared phases here.</p>'; return; }
+  try{
+    const snap = await fdb.collection('shared_phases').where('fromKey','in',visibleKeys).get();
+    const shared = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    if(shared.length===0){ el.innerHTML = '<p class="hint">No shared roadmap phases yet.</p>'; return; }
+    el.innerHTML = shared.map(s=>`
+      <div class="shared-phase-item" data-id="${s.id}">
+        <span><strong>${s.phase.title}</strong> — shared by ${s.fromName} (${s.phase.topics.length} chapters)</span>
+        <button class="btn btn-small" data-import="${s.id}">+ Add to my roadmap</button>
+        ${s.fromKey===currentUsernameKey ? '<button class="del-btn" title="Remove">✕</button>' : ''}
+      </div>
+    `).join('');
+    el.querySelectorAll('[data-import]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const s = shared.find(x=>x.id===btn.dataset.import);
+        if(!s) return;
+        const cloned = JSON.parse(JSON.stringify(s.phase));
+        cloned.id = genId('phase');
+        cloned.topics.forEach(t=> t.id = genId('ch'));
+        roadmapPhases.push(cloned);
+        await persistRoadmap();
+        renderRoadmap(); renderToday(); refreshTaskCategoryOptions(); refreshSharePhaseOptions();
+        btn.textContent = 'Added ✓';
+      });
+    });
+    el.querySelectorAll('.del-btn').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        await fdb.collection('shared_phases').doc(btn.closest('.shared-phase-item').dataset.id).delete();
+        renderSharedPhases();
+      });
+    });
+  }catch(e){ console.error(e); el.innerHTML = '<p class="hint">Could not load shared phases.</p>'; }
+}
+
+/* ---------------- Collaborative Roadmaps ----------------
+   A roadmap that lives in Firestore (not the local vault) so every accepted
+   friend who's a member can view and edit it from their own device. Invites
+   go through collab_invites the same way friend requests do: send → pending
+   → accepted, and only then does the invitee gain access (added to the
+   roadmap doc's `members` array). While a roadmap is open, onSnapshot keeps
+   everyone's view in sync in real time; we skip re-rendering our own writes
+   (snapshot.metadata.hasPendingWrites) so typing/checking boxes doesn't get
+   clobbered by our own echo. --------------------------------------------- */
+let collabRoadmapsCache = [];
+let currentCollabRoadmapId = null;
+let currentCollabDoc = null;
+let currentCollabPhases = [];
+let collabUnsub = null;
+
+async function getMyFriendsWithNames(){
+  const keys = await getMyFriendsList();
+  if(keys.length===0) return [];
+  try{
+    const docs = await Promise.all(keys.map(k=>fdb.collection('users').doc(k).get()));
+    return docs.filter(d=>d.exists).map(d=>({key:d.id, name:d.data().username}));
+  }catch(e){ return []; }
+}
+
+document.getElementById('newCollabRoadmapBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('newCollabRoadmapInput');
+  const hint = document.getElementById('collabRoadmapHint');
+  hint.textContent = '';
+  if(!firebaseEnabled){ hint.textContent = 'Set up Firebase first — see the card above.'; return; }
+  const title = input.value.trim();
+  if(!title) return;
+  try{
+    await fdb.collection('collab_roadmaps').add({
+      title, ownerKey: currentUsernameKey, ownerName: currentUsernameDisplay,
+      members: [currentUsernameKey], memberNames: {[currentUsernameKey]: currentUsernameDisplay},
+      phases: [], createdAt: new Date().toISOString()
+    });
+    input.value = '';
+    hint.textContent = `Created "${title}" ✓`;
+    setTimeout(()=> hint.textContent='', 2000);
+    renderCollabRoadmapsList();
+  }catch(e){ console.error(e); hint.textContent = 'Something went wrong creating that.'; }
+});
+
+async function renderCollabRoadmapsList(){
+  const el = document.getElementById('collabRoadmapsList');
+  if(!el) return;
+  if(!firebaseEnabled){ el.innerHTML = ''; return; }
+  try{
+    const snap = await fdb.collection('collab_roadmaps').where('members','array-contains',currentUsernameKey).get();
+    collabRoadmapsCache = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    if(collabRoadmapsCache.length===0){ el.innerHTML = '<p class="hint">None yet — create one above, or accept an invite.</p>'; return; }
+    const friends = await getMyFriendsWithNames();
+    el.innerHTML = collabRoadmapsCache.map(r=>{
+      const memberCount = (r.members||[]).length;
+      const chapterCount = (r.phases||[]).reduce((acc,p)=> acc + (p.topics?p.topics.length:0), 0);
+      const invitable = friends.filter(f=> !(r.members||[]).includes(f.key));
+      return `<div class="shared-phase-item" data-collabid="${r.id}" style="flex-wrap:wrap;">
+        <span><strong>${r.title}</strong> — ${memberCount} member${memberCount===1?'':'s'}, ${chapterCount} chapter${chapterCount===1?'':'s'}</span>
+        <button class="btn btn-small" data-openroadmap="${r.id}">Open</button>
+        ${invitable.length ? `
+          <select data-inviteselect="${r.id}" style="max-width:150px;">
+            ${invitable.map(f=>`<option value="${f.key}">${f.name}</option>`).join('')}
+          </select>
+          <button class="icon-btn add" data-invitebtn="${r.id}">+ Invite</button>` : ''}
+        ${r.ownerKey===currentUsernameKey
+          ? `<button class="icon-btn" data-delroadmap="${r.id}" title="Delete">🗑</button>`
+          : `<button class="icon-btn" data-leaveroadmap="${r.id}" title="Leave this roadmap">Leave</button>`}
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-openroadmap]').forEach(btn=>{
+      btn.addEventListener('click', ()=> openCollabRoadmap(btn.dataset.openroadmap));
+    });
+    el.querySelectorAll('[data-invitebtn]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const roadmapId = btn.dataset.invitebtn;
+        const sel = el.querySelector(`[data-inviteselect="${roadmapId}"]`);
+        if(!sel || !sel.value) return;
+        const toKey = sel.value;
+        const toName = sel.options[sel.selectedIndex].textContent;
+        const r = collabRoadmapsCache.find(x=>x.id===roadmapId);
+        try{
+          await fdb.collection('collab_invites').add({
+            roadmapId, roadmapTitle: r.title,
+            fromKey: currentUsernameKey, fromName: currentUsernameDisplay,
+            toKey, toName, status:'pending', timestamp: new Date().toISOString()
+          });
+          btn.textContent = 'Invited ✓';
+          btn.disabled = true;
+        }catch(e){ console.error(e); }
+      });
+    });
+    el.querySelectorAll('[data-delroadmap]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        armConfirm(e.target, async ()=>{
+          await fdb.collection('collab_roadmaps').doc(btn.dataset.delroadmap).delete();
+          renderCollabRoadmapsList();
+        });
+      });
+    });
+    el.querySelectorAll('[data-leaveroadmap]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        armConfirm(e.target, async ()=>{
+          await fdb.collection('collab_roadmaps').doc(btn.dataset.leaveroadmap).update({
+            members: firebase.firestore.FieldValue.arrayRemove(currentUsernameKey)
+          });
+          renderCollabRoadmapsList();
+        });
+      });
+    });
+  }catch(e){ console.error(e); el.innerHTML = '<p class="hint">Could not load collaborative roadmaps.</p>'; }
+}
+
+async function renderCollabInvites(){
+  const el = document.getElementById('collabInvitesList');
+  if(!el) return;
+  if(!firebaseEnabled){ el.innerHTML = ''; return; }
+  try{
+    const snap = await fdb.collection('collab_invites')
+      .where('toKey','==',currentUsernameKey).where('status','==','pending').get();
+    if(snap.empty){ el.innerHTML = '<p class="hint">No pending invites.</p>'; return; }
+    el.innerHTML = snap.docs.map(d=>{
+      const inv = d.data();
+      return `<div class="shared-phase-item" data-id="${d.id}">
+        <span><strong>${inv.fromName}</strong> invited you to "<strong>${inv.roadmapTitle}</strong>"</span>
+        <button class="btn btn-small" data-acceptcollab="${d.id}" data-roadmap="${inv.roadmapId}">Accept</button>
+        <button class="icon-btn" data-declinecollab="${d.id}" title="Decline">✕</button>
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-acceptcollab]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const inviteId = btn.dataset.acceptcollab, roadmapId = btn.dataset.roadmap;
+        try{
+          await fdb.collection('collab_invites').doc(inviteId).update({status:'accepted'});
+          await fdb.collection('collab_roadmaps').doc(roadmapId).update({
+            members: firebase.firestore.FieldValue.arrayUnion(currentUsernameKey),
+            [`memberNames.${currentUsernameKey}`]: currentUsernameDisplay
+          });
+          renderCollabInvites(); renderCollabRoadmapsList();
+        }catch(e){ console.error(e); }
+      });
+    });
+    el.querySelectorAll('[data-declinecollab]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        await fdb.collection('collab_invites').doc(btn.dataset.declinecollab).update({status:'declined'});
+        renderCollabInvites();
+      });
+    });
+  }catch(e){ console.error(e); el.innerHTML = '<p class="hint">Could not load invites.</p>'; }
+}
+
+function openCollabRoadmap(id){
+  currentCollabRoadmapId = id;
+  document.getElementById('collabListSection').style.display = 'none';
+  document.getElementById('collabInvitesCard').style.display = 'none';
+  document.getElementById('collabDetailSection').style.display = 'block';
+  if(collabUnsub){ collabUnsub(); collabUnsub = null; }
+  collabUnsub = fdb.collection('collab_roadmaps').doc(id).onSnapshot(snap=>{
+    if(!snap.exists){ closeCollabRoadmap(); return; }
+    if(snap.metadata.hasPendingWrites) return; // our own write echoing back — already rendered locally
+    currentCollabDoc = {id:snap.id, ...snap.data()};
+    currentCollabPhases = currentCollabDoc.phases || [];
+    renderCollabDetail();
+  }, err=>{ console.error(err); });
+}
+function closeCollabRoadmap(){
+  if(collabUnsub){ collabUnsub(); collabUnsub = null; }
+  currentCollabRoadmapId = null; currentCollabDoc = null; currentCollabPhases = [];
+  document.getElementById('collabDetailSection').style.display = 'none';
+  document.getElementById('collabListSection').style.display = 'block';
+  document.getElementById('collabInvitesCard').style.display = 'block';
+  renderCollabRoadmapsList(); renderCollabInvites();
+}
+document.getElementById('collabBackBtn').addEventListener('click', closeCollabRoadmap);
+
+async function persistCollabRoadmap(){
+  if(!currentCollabRoadmapId) return;
+  try{ await fdb.collection('collab_roadmaps').doc(currentCollabRoadmapId).update({phases: currentCollabPhases}); }
+  catch(e){ console.error(e); }
+}
+function collabChecklistStatus(t){
+  const checks = t.checklist || [];
+  const doneCount = checks.filter(Boolean).length;
+  if(t.points.length===0) return 'todo';
+  if(doneCount===0) return 'todo';
+  if(doneCount===t.points.length) return 'done';
+  return 'inprogress';
+}
+
+document.getElementById('collabDetailTitle').addEventListener('blur', async e=>{
+  const newTitle = e.target.textContent.trim();
+  if(newTitle && currentCollabRoadmapId){
+    currentCollabDoc.title = newTitle;
+    try{ await fdb.collection('collab_roadmaps').doc(currentCollabRoadmapId).update({title:newTitle}); }catch(err){ console.error(err); }
+  }
+});
+document.getElementById('collabAddPhaseBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('collabNewPhaseInput');
+  const title = input.value.trim();
+  if(!title || !currentCollabRoadmapId) return;
+  currentCollabPhases.push({id:genId('phase'), title, topics:[]});
+  input.value = '';
+  await persistCollabRoadmap();
+  renderCollabDetail();
+});
+
+function renderCollabDetail(){
+  if(!currentCollabDoc) return;
+  document.getElementById('collabDetailTitle').textContent = currentCollabDoc.title || 'Untitled';
+  const names = Object.values(currentCollabDoc.memberNames || {});
+  document.getElementById('collabMembersLine').textContent =
+    'Members: ' + (names.length ? names.join(', ') : (currentCollabDoc.ownerName || ''));
+
+  const container = document.getElementById('collabRoadmapContainer');
+  container.innerHTML = '';
+  if(currentCollabPhases.length===0){
+    container.innerHTML = '<p class="hint">No phases yet — add the first one above.</p>';
+  }
+  currentCollabPhases.forEach((phase, pIdx)=>{
+    const total = phase.topics.length;
+    const done = phase.topics.filter(t=> collabChecklistStatus(t)==='done').length;
+    const pct = total ? Math.round((done/total)*100) : 0;
+
+    const block = document.createElement('div');
+    block.className = 'phase-block';
+    block.innerHTML = `
+      <div class="phase-head">
+        <span class="phase-num">PHASE ${String(pIdx+1).padStart(2,'0')}</span>
+        <span class="phase-title" contenteditable="true">${phase.title}</span>
+        <div class="phase-bar-track"><div class="phase-bar-fill" style="width:${pct}%"></div></div>
+        <span class="phase-pct">${pct}%</span>
+        <button class="icon-btn" data-delphase="${phase.id}" title="Delete phase">🗑</button>
+      </div>
+      <div class="trace"></div>
+      <div class="roadmap-form">
+        <input type="text" class="mini-icon-input" placeholder="📘" id="collabChIcon_${phase.id}">
+        <input type="text" placeholder="New chapter title" id="collabChTitle_${phase.id}">
+        <button class="btn btn-small" data-addchapter="${phase.id}">+ Add Chapter</button>
+      </div>
+    `;
+    container.appendChild(block);
+
+    block.querySelector('.phase-title').addEventListener('blur', async e=>{
+      phase.title = e.target.textContent.trim() || phase.title;
+      await persistCollabRoadmap();
+    });
+    block.querySelector('[data-delphase]').addEventListener('click', e=>{
+      armConfirm(e.target, async ()=>{
+        currentCollabPhases = currentCollabPhases.filter(p=>p.id!==phase.id);
+        await persistCollabRoadmap();
+        renderCollabDetail();
+      });
+    });
+    block.querySelector('[data-addchapter]').addEventListener('click', async ()=>{
+      const iconEl = document.getElementById(`collabChIcon_${phase.id}`);
+      const titleEl = document.getElementById(`collabChTitle_${phase.id}`);
+      const title = titleEl.value.trim();
+      if(!title) return;
+      phase.topics.push({id:genId('ch'), icon: iconEl.value.trim() || '📘', title, notes:'', points:[], checklist:[]});
+      iconEl.value=''; titleEl.value='';
+      await persistCollabRoadmap();
+      renderCollabDetail();
+    });
+
+    const trace = block.querySelector('.trace');
+    phase.topics.forEach(t=>{
+      if(!t.checklist) t.checklist = t.points.map(()=>false);
+      const checks = t.checklist;
+      const status = collabChecklistStatus(t);
+      const doneCount = checks.filter(Boolean).length;
+      const tpct = t.points.length ? Math.round((doneCount/t.points.length)*100) : 0;
+      const badge = badgeFor(tpct);
+      const div = document.createElement('div');
+      div.className = `topic status-${status}`;
+      div.innerHTML = `
+        <div class="topic-top">
+          <div class="topic-title" contenteditable="true">${t.icon} ${t.title}</div>
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            ${badge ? `<span class="badge-chip ${badge.cls}">${badge.emoji} ${badge.label}</span>` : ''}
+            <span class="status-chip status-${status}">${statusLabelFor(status)}</span>
+            <button class="icon-btn" data-delchapter="${t.id}" title="Delete chapter">🗑</button>
+          </div>
+        </div>
+        <ul class="checklist">
+          ${t.points.map((p,i)=>`
+            <li class="${checks[i]?'checked':''}">
+              <input type="checkbox" data-idx="${i}" ${checks[i]?'checked':''}>
+              <span class="item-text" contenteditable="true" data-subtopic="${i}">${p}</span>
+              <button class="icon-btn" data-delsub="${i}" title="Delete">✕</button>
+            </li>`).join('')}
+        </ul>
+        <div class="add-subtopic-row">
+          <input type="text" placeholder="Add a subtopic…" data-newsub="${t.id}">
+          <button class="icon-btn add" data-addsub="${t.id}">+ Add</button>
+        </div>
+        <div class="checklist-progress">${doneCount} / ${t.points.length} topics checked · ${tpct}%</div>
+        <textarea class="notes-area" placeholder="Notes for this chapter…" data-notes="${t.id}">${t.notes || ''}</textarea>
+      `;
+
+      div.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+        cb.addEventListener('click', e=> e.stopPropagation());
+        cb.addEventListener('change', async e=>{
+          const idx = +e.target.dataset.idx;
+          t.checklist[idx] = e.target.checked;
+          await persistCollabRoadmap();
+          renderCollabDetail();
+        });
+      });
+      div.querySelector('.topic-title').addEventListener('blur', async e=>{
+        const newTitle = e.target.textContent.replace(t.icon,'').trim();
+        if(newTitle) t.title = newTitle;
+        await persistCollabRoadmap();
+      });
+      div.querySelector('[data-delchapter]').addEventListener('click', e=>{
+        armConfirm(e.target, async ()=>{
+          phase.topics = phase.topics.filter(x=>x.id!==t.id);
+          await persistCollabRoadmap();
+          renderCollabDetail();
+        });
+      });
+      div.querySelectorAll('[data-subtopic]').forEach(elx=>{
+        elx.addEventListener('blur', async e=>{
+          const idx = +e.target.dataset.subtopic;
+          const newText = e.target.textContent.trim();
+          if(newText) t.points[idx] = newText;
+          await persistCollabRoadmap();
+        });
+      });
+      div.querySelectorAll('[data-delsub]').forEach(btn=>{
+        btn.addEventListener('click', async ()=>{
+          const idx = +btn.dataset.delsub;
+          t.points.splice(idx,1);
+          t.checklist.splice(idx,1);
+          await persistCollabRoadmap();
+          renderCollabDetail();
+        });
+      });
+      div.querySelector('[data-addsub]').addEventListener('click', async ()=>{
+        const input = div.querySelector(`[data-newsub="${t.id}"]`);
+        const text = input.value.trim();
+        if(!text) return;
+        t.points.push(text);
+        t.checklist.push(false);
+        await persistCollabRoadmap();
+        renderCollabDetail();
+      });
+      div.querySelector('[data-notes]').addEventListener('blur', async e=>{
+        t.notes = e.target.value;
+        await persistCollabRoadmap();
+      });
+
+      trace.appendChild(div);
+    });
+  });
+}
+
+function renderFriendsTab(){
+  const setupNote = document.getElementById('firebaseSetupNote');
+  if(setupNote) setupNote.style.display = firebaseEnabled ? 'none' : 'block';
+  const errEl = document.getElementById('firebaseErrorDetail');
+  if(errEl){
+    if(!firebaseEnabled && firebaseInitError){
+      errEl.style.display = 'block';
+      errEl.textContent = `Detected problem: ${firebaseInitError}`;
+    } else {
+      errEl.style.display = 'none';
+      errEl.textContent = '';
+    }
+  }
+  registerMyPresence();
+  renderPendingRequests();
+  renderLeaderboard();
+  renderSharedBoard();
+  refreshSharePhaseOptions();
+  renderSharedPhases();
+  if(currentCollabRoadmapId){
+    // stay on whichever collab roadmap is currently open
+  } else {
+    renderCollabInvites();
+    renderCollabRoadmapsList();
+  }
+}
+
+
+/* ---------------- XP / Level system ---------------- */
+let totalXP = 0;
+function levelForXP(xp){ return Math.floor(1 + Math.sqrt(xp/20)); }
+function xpForLevel(level){ return Math.pow(level-1,2)*20; }
+async function awardXP(delta){
+  totalXP = Math.max(0, totalXP + delta);
+  await saveData('xp_v1', totalXP);
+  renderXPBadge();
+  updateMyPublicProfile();
+}
+function renderXPBadge(){
+  const badge = document.getElementById('xpBadge');
+  if(!badge) return;
+  const level = levelForXP(totalXP);
+  const thisLevelXP = xpForLevel(level);
+  const nextLevelXP = xpForLevel(level+1);
+  const pct = Math.round(((totalXP-thisLevelXP)/(nextLevelXP-thisLevelXP))*100);
+  badge.textContent = `⚡ Lv ${level}`;
+  badge.title = `${totalXP} XP · ${nextLevelXP-totalXP} XP to Level ${level+1}`;
+  const bar = document.getElementById('xpBarFill');
+  if(bar) bar.style.width = pct+'%';
+}
 function todayKey(){ return new Date().toISOString().slice(0,10); }
 
 /* Two-step confirm that works everywhere (window.confirm() gets silently blocked in some sandboxed previews) */
@@ -875,16 +1862,50 @@ function armConfirm(btn, onConfirm){
 const today = new Date();
 document.getElementById('todayBox').textContent = today.toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
 
-let currentTheme = 'light';
+const THEME_CYCLE = ['dark','light','glass'];
+const THEME_ICON = {light:'🌙', dark:'✨', glass:'☀️'};
+let currentTheme = 'dark';
 async function applyTheme(t){
   currentTheme = t;
-  document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('themeToggle').textContent = t==='dark' ? '☀️' : '🌙';
+  if(t==='light') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeToggle').textContent = THEME_ICON[t];
   await saveData('theme_v1', t);
+  applyTimeOfDayTint();
 }
 document.getElementById('themeToggle').addEventListener('click', ()=>{
-  applyTheme(currentTheme==='dark' ? 'light' : 'dark');
+  const next = THEME_CYCLE[(THEME_CYCLE.indexOf(currentTheme)+1) % THEME_CYCLE.length];
+  applyTheme(next);
 });
+
+function applyTimeOfDayTint(){
+  document.body.classList.remove('tod-morning','tod-afternoon','tod-evening','tod-night');
+  if(currentTheme !== 'light') return; // dark/glass define their own --paper; don't fight with it
+  const hour = new Date().getHours();
+  let cls = 'tod-afternoon';
+  if(hour<11) cls = 'tod-morning';
+  else if(hour<17) cls = 'tod-afternoon';
+  else if(hour<21) cls = 'tod-evening';
+  else cls = 'tod-night';
+  document.body.classList.add(cls);
+}
+applyTimeOfDayTint();
+
+/* ---------------- Splash screen ---------------- */
+window.addEventListener('load', ()=>{
+  const splash = document.getElementById('splashScreen');
+  const logoSrc = document.getElementById('logoBox').src;
+  document.getElementById('splashLogo').src = logoSrc;
+  setTimeout(()=> splash.classList.add('hide'), 1100);
+});
+
+/* ---------------- Micro-animation helper ---------------- */
+function popAnimate(el){
+  if(!el) return;
+  el.classList.remove('pop-anim');
+  void el.offsetWidth; // restart animation
+  el.classList.add('pop-anim');
+}
 
 /* ---------------- Goals ---------------- */
 const goals = ["High CGPA","Strong AI Skills","Placement Ready","Healthy Lifestyle","Personal Growth"];
@@ -1255,9 +2276,12 @@ function renderSyllabus(){
       cb.addEventListener('change', async (e)=>{
         const idx = +e.target.dataset.idx;
         const arr = syllabusProgress[subject.code] || new Array(total).fill(false);
+        const wasChecked = arr[idx];
         arr[idx] = e.target.checked;
         syllabusProgress[subject.code] = arr;
         await saveData('syllabus_progress_v1', syllabusProgress);
+        if(e.target.checked && !wasChecked){ await awardXP(3); popAnimate(e.target.closest('li')); checkAchievements(); }
+        else if(!e.target.checked && wasChecked){ await awardXP(-3); }
         renderSyllabus();
       });
     });
@@ -1470,8 +2494,11 @@ function renderTodayScheduleChecklist(){
     cb.addEventListener('change', async (e)=>{
       const rIdx = e.target.dataset.row;
       const entry2 = scheduleEntry(dateKey);
+      const wasChecked = entry2.checks[rIdx];
       entry2.checks[rIdx] = e.target.checked;
       await saveData('schedule_log_v1', scheduleLog);
+      if(e.target.checked && !wasChecked){ await awardXP(2); popAnimate(e.target.closest('li')); checkAchievements(); }
+      else if(!e.target.checked && wasChecked){ await awardXP(-2); }
       renderTodayScheduleChecklist();
     });
   });
@@ -1573,6 +2600,525 @@ document.getElementById('addStayingBtn').addEventListener('click', async ()=>{
   renderStayingCurrent();
 });
 
+/* ================= SKINCARE ================= */
+let skincareRoutine = {AM:[], PM:[]}; // {AM:[string], PM:[string]}
+let skincareLog = {}; // {"YYYY-MM-DD": {AM:{idx:bool}, PM:{idx:bool}}}
+let skincareProducts = []; // [{id, name, category, status}]
+
+async function persistSkincareRoutine(){ await saveData('skincare_routine_v1', skincareRoutine); }
+async function persistSkincareLog(){ await saveData('skincare_log_v1', skincareLog); }
+async function persistSkincareProducts(){ await saveData('skincare_products_v1', skincareProducts); }
+
+function skincareEntry(dateKey){
+  if(!skincareLog[dateKey]) skincareLog[dateKey] = {AM:{}, PM:{}};
+  return skincareLog[dateKey];
+}
+function skincareDayScore(dateKey){
+  const e = skincareLog[dateKey];
+  const amTotal = skincareRoutine.AM.length, pmTotal = skincareRoutine.PM.length;
+  const total = amTotal + pmTotal;
+  if(!e || total===0) return {done:0, total};
+  const amDone = Object.values(e.AM||{}).filter(Boolean).length;
+  const pmDone = Object.values(e.PM||{}).filter(Boolean).length;
+  return {done: amDone+pmDone, total};
+}
+function computeSkincareStreak(){
+  let streak = 0;
+  let d = new Date();
+  while(true){
+    const key = d.toISOString().slice(0,10);
+    const {done} = skincareDayScore(key);
+    if(done>0){ streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return streak;
+}
+
+function renderSkincareSection(period, listId){
+  const dateKey = todayKey();
+  const entry = skincareEntry(dateKey);
+  const list = document.getElementById(listId);
+  list.innerHTML = skincareRoutine[period].map((step,idx)=>`
+    <li class="${entry[period][idx]?'checked':''}">
+      <input type="checkbox" data-period="${period}" data-idx="${idx}" ${entry[period][idx]?'checked':''}>
+      <span class="item-text" contenteditable="true" data-period-edit="${period}" data-idx-edit="${idx}">${step}</span>
+      <button class="icon-btn" data-delstep="${period}:${idx}" title="Delete">✕</button>
+    </li>`).join('');
+
+  list.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', async (e)=>{
+      const p = e.target.dataset.period, idx = e.target.dataset.idx;
+      const entry2 = skincareEntry(dateKey);
+      const wasChecked = entry2[p][idx];
+      entry2[p][idx] = e.target.checked;
+      await persistSkincareLog();
+      if(e.target.checked && !wasChecked){ await awardXP(2); popAnimate(e.target.closest('li')); checkAchievements(); }
+      else if(!e.target.checked && wasChecked){ await awardXP(-2); }
+      renderSkincareAll();
+    });
+  });
+  list.querySelectorAll('[data-period-edit]').forEach(el=>{
+    el.addEventListener('blur', async (e)=>{
+      const p = e.target.dataset.periodEdit, idx = +e.target.dataset.idxEdit;
+      const text = e.target.textContent.trim();
+      if(text) skincareRoutine[p][idx] = text;
+      await persistSkincareRoutine();
+      renderSkincareAll();
+    });
+  });
+  list.querySelectorAll('[data-delstep]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const [p, idxStr] = btn.dataset.delstep.split(':');
+      const idx = +idxStr;
+      skincareRoutine[p].splice(idx,1);
+      Object.values(skincareLog).forEach(day=>{ if(day[p]) delete day[p][idx]; });
+      await persistSkincareRoutine();
+      await persistSkincareLog();
+      renderSkincareAll();
+    });
+  });
+}
+function renderSkincareAll(){
+  renderSkincareSection('AM','skincareAmList');
+  renderSkincareSection('PM','skincarePmList');
+  const streak = computeSkincareStreak();
+  document.getElementById('statSkincareStreak').textContent = streak;
+  const {done,total} = skincareDayScore(todayKey());
+  document.getElementById('statSkincareToday').textContent = total ? `${done}/${total}` : '—';
+}
+document.getElementById('addAmStepBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('newAmStepInput');
+  const text = input.value.trim();
+  if(!text) return;
+  skincareRoutine.AM.push(text);
+  input.value='';
+  await persistSkincareRoutine();
+  renderSkincareAll();
+});
+document.getElementById('addPmStepBtn').addEventListener('click', async ()=>{
+  const input = document.getElementById('newPmStepInput');
+  const text = input.value.trim();
+  if(!text) return;
+  skincareRoutine.PM.push(text);
+  input.value='';
+  await persistSkincareRoutine();
+  renderSkincareAll();
+});
+
+const productStatusCycle = {Active:'RunningLow', RunningLow:'Empty', Empty:'Active'};
+const productStatusLabel = {Active:'Active', RunningLow:'Running Low', Empty:'Empty'};
+function renderProductList(){
+  const el = document.getElementById('productList');
+  if(skincareProducts.length===0){
+    el.innerHTML = '<div class="empty-state">No products yet — add what you use above.</div>';
+    return;
+  }
+  el.innerHTML = skincareProducts.map(p=>`
+    <div class="product-item" data-id="${p.id}">
+      <span class="product-name">${p.name}</span>
+      <span class="product-cat">${p.category}</span>
+      <button class="status-badge status-${p.status}">${productStatusLabel[p.status]}</button>
+      <button class="del-btn" title="Delete">✕</button>
+    </div>
+  `).join('');
+  el.querySelectorAll('.status-badge').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      const id = e.target.closest('.product-item').dataset.id;
+      const p = skincareProducts.find(x=>x.id===id);
+      p.status = productStatusCycle[p.status];
+      await persistSkincareProducts();
+      renderProductList();
+    });
+  });
+  el.querySelectorAll('.del-btn').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      const id = e.target.closest('.product-item').dataset.id;
+      skincareProducts = skincareProducts.filter(x=>x.id!==id);
+      await persistSkincareProducts();
+      renderProductList();
+    });
+  });
+}
+document.getElementById('addProductBtn').addEventListener('click', async ()=>{
+  const name = document.getElementById('newProductName').value.trim();
+  const category = document.getElementById('newProductCategory').value;
+  if(!name) return;
+  skincareProducts.push({id:genId('prod'), name, category, status:'Active'});
+  document.getElementById('newProductName').value='';
+  await persistSkincareProducts();
+  renderProductList();
+});
+
+/* ================= DIET PLAN ================= */
+const dietMealsDefault = ["Breakfast","Lunch","Snack","Dinner"];
+function blankDietPlan(){
+  return dietMealsDefault.map(meal=>({
+    time: meal, d: Object.fromEntries(personalDays.map(day=>[day,""]))
+  }));
+}
+let dietPlanData = [];
+let dietLog = {}; // {"YYYY-MM-DD": {checks:{rowIdx:bool}, notes:""}}
+
+async function persistDietPlan(){ await saveData('diet_plan_v1', dietPlanData); }
+async function persistDietLog(){ await saveData('diet_log_v1', dietLog); }
+function dietEntry(dateKey){
+  if(!dietLog[dateKey]) dietLog[dateKey] = {checks:{}, notes:''};
+  if(!dietLog[dateKey].checks) dietLog[dateKey].checks = {};
+  return dietLog[dateKey];
+}
+function dietMealsForWeekday(weekdayName){
+  const meals = [];
+  dietPlanData.forEach((r, rIdx)=>{
+    const text = (r.d[weekdayName] || '').trim();
+    if(text) meals.push({rowIndex: rIdx, time: r.time, text});
+  });
+  return meals;
+}
+function renderDietTable(){
+  const table = document.getElementById('dietTable');
+  let html = '<tr><th>Meal</th>' + personalDays.map(d=>`<th>${d}</th>`).join('') + '</tr>';
+  dietPlanData.forEach((r, rIdx)=>{
+    html += `<tr><td class="timecell">${r.time}</td>`;
+    personalDays.forEach(day=>{
+      const text = r.d[day] || '';
+      const cls = text ? 'tag-health' : 'empty';
+      html += `<td><div class="cell-content ${cls}" contenteditable="true" data-row="${rIdx}" data-day="${day}">${text}</div></td>`;
+    });
+    html += '</tr>';
+  });
+  table.innerHTML = html;
+  table.querySelectorAll('.cell-content').forEach(el=>{
+    el.addEventListener('blur', async ()=>{
+      const rIdx = +el.dataset.row, day = el.dataset.day;
+      dietPlanData[rIdx].d[day] = el.textContent.trim();
+      await persistDietPlan();
+      renderDietTable();
+      renderDietChecklist();
+    });
+  });
+}
+function renderDietChecklist(){
+  const todayName = currentWeekdayName();
+  const dateKey = todayKey();
+  const meals = dietMealsForWeekday(todayName);
+  const entry = dietEntry(dateKey);
+
+  document.getElementById('dietChecklistDate').textContent =
+    new Date().toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric'});
+
+  const list = document.getElementById('dietChecklist');
+  if(meals.length===0){
+    list.innerHTML = '<div class="empty-state">No meals planned for today yet — add some in the Weekly Meal Plan above.</div>';
+  } else {
+    list.innerHTML = meals.map(m=>`
+      <li class="${entry.checks[m.rowIndex]?'checked':''}">
+        <input type="checkbox" data-row="${m.rowIndex}" ${entry.checks[m.rowIndex]?'checked':''}>
+        <span class="item-text">${m.time} — ${m.text}</span>
+      </li>`).join('');
+  }
+  const checkedCount = meals.filter(m=>entry.checks[m.rowIndex]).length;
+  document.getElementById('dietChecklistProgress').textContent =
+    `${checkedCount} / ${meals.length} meals logged today`;
+
+  const notesInput = document.getElementById('dietNotesInput');
+  if(document.activeElement !== notesInput) notesInput.value = entry.notes || '';
+
+  list.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', async (e)=>{
+      const rIdx = e.target.dataset.row;
+      const entry2 = dietEntry(dateKey);
+      const wasChecked = entry2.checks[rIdx];
+      entry2.checks[rIdx] = e.target.checked;
+      await persistDietLog();
+      if(e.target.checked && !wasChecked){ await awardXP(2); popAnimate(e.target.closest('li')); checkAchievements(); }
+      else if(!e.target.checked && wasChecked){ await awardXP(-2); }
+      renderDietChecklist();
+    });
+  });
+}
+document.getElementById('saveDietNotesBtn').addEventListener('click', async ()=>{
+  const entry = dietEntry(todayKey());
+  entry.notes = document.getElementById('dietNotesInput').value;
+  await persistDietLog();
+  document.getElementById('savedDietNotesHint').textContent = 'Saved ✓';
+  setTimeout(()=> document.getElementById('savedDietNotesHint').textContent = '', 1500);
+});
+document.getElementById('resetTodayDietBtn').addEventListener('click', (e)=>{
+  armConfirm(e.target, async ()=>{
+    dietLog[todayKey()] = {checks:{}, notes:''};
+    await persistDietLog();
+    renderDietChecklist();
+  });
+});
+
+/* ================= ACHIEVEMENTS ================= */
+let unlockedAchievements = {}; // {id: isoDateString}
+const ACHIEVEMENTS = [
+  {id:'streak_3', emoji:'🌱', label:'3-Day Streak', check:()=> computeStreak()>=3},
+  {id:'streak_7', emoji:'🔥', label:'Week Warrior', check:()=> computeStreak()>=7},
+  {id:'streak_30', emoji:'💪', label:'Month Master', check:()=> computeStreak()>=30},
+  {id:'roadmap_25', emoji:'🎯', label:'Quarter Way', check:()=>{const {done,total}=totalRoadmapCounts(); return total>0 && done/total>=0.25;}},
+  {id:'roadmap_50', emoji:'🎯', label:'Halfway There', check:()=>{const {done,total}=totalRoadmapCounts(); return total>0 && done/total>=0.5;}},
+  {id:'roadmap_100', emoji:'🏆', label:'Roadmap Complete', check:()=>{const {done,total}=totalRoadmapCounts(); return total>0 && done===total;}},
+  {id:'tasks_10', emoji:'✅', label:'10 Tasks Done', check:()=> lifetimeTasksCompleted>=10},
+  {id:'tasks_50', emoji:'✅', label:'50 Tasks Done', check:()=> lifetimeTasksCompleted>=50},
+  {id:'tasks_100', emoji:'🏅', label:'100 Tasks Done', check:()=> lifetimeTasksCompleted>=100},
+  {id:'schedule_streak_7', emoji:'📅', label:'Schedule Streak', check:()=> computeScheduleStreak()>=7},
+  {id:'skincare_streak_7', emoji:'🧴', label:'Glow Getter', check:()=> computeSkincareStreak()>=7},
+  {id:'subject_mastered', emoji:'📚', label:'Subject Mastered', check:()=> syllabusSubjects.some(s=>{
+      const total=getSyllabusItemCount(s); const checks=syllabusProgress[s.code]||[];
+      return total>0 && checks.filter(Boolean).length===total;
+    })},
+  {id:'level_5', emoji:'⚡', label:'Level 5', check:()=> levelForXP(totalXP)>=5},
+  {id:'level_10', emoji:'⚡', label:'Level 10', check:()=> levelForXP(totalXP)>=10},
+];
+async function checkAchievements(){
+  let changed = false;
+  ACHIEVEMENTS.forEach(a=>{
+    if(!unlockedAchievements[a.id] && a.check()){
+      unlockedAchievements[a.id] = new Date().toISOString();
+      changed = true;
+      fireConfetti();
+    }
+  });
+  if(changed) await saveData('achievements_v1', unlockedAchievements);
+  renderAchievements();
+}
+function renderAchievements(){
+  const grid = document.getElementById('achievementsGrid');
+  if(!grid) return;
+  grid.innerHTML = ACHIEVEMENTS.map(a=>{
+    const unlocked = unlockedAchievements[a.id];
+    const dateLabel = unlocked ? new Date(unlocked).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Locked';
+    return `<div class="achievement-card ${unlocked?'unlocked':''}">
+      <div class="achievement-emoji">${a.emoji}</div>
+      <div class="achievement-label">${a.label}</div>
+      <div class="achievement-date">${dateLabel}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ================= DAILY CHALLENGES ================= */
+const CHALLENGE_POOL = [
+  {id:'ch_tasks5', text:'Complete 5 tasks today', check:()=> tasks.filter(t=>t.completedAt && t.completedAt.slice(0,10)===todayKey()).length>=5},
+  {id:'ch_study60', text:'Log 60+ minutes of study time', check:()=> ((activityLog[todayKey()]||{}).studyMinutes||0)>=60},
+  {id:'ch_schedule100', text:"Complete all of today's schedule blocks", check:()=> scheduleAdherenceForDate(new Date()).pct===100 && scheduleAdherenceForDate(new Date()).total>0},
+  {id:'ch_roadmap1', text:'Check off at least 1 roadmap item', check:()=> ((activityLog[todayKey()]||{}).itemsCompleted||0)>=1},
+  {id:'ch_skincareAM', text:'Complete your full AM skincare routine', check:()=>{
+      const e=skincareEntry(todayKey()); const total=skincareRoutine.AM.length;
+      return total>0 && Object.values(e.AM||{}).filter(Boolean).length===total;
+    }},
+  {id:'ch_dietAll', text:"Log all of today's planned meals", check:()=>{
+      const meals = dietMealsForWeekday(currentWeekdayName());
+      const e = dietEntry(todayKey());
+      return meals.length>0 && meals.every(m=>e.checks[m.rowIndex]);
+    }},
+];
+let dailyChallengeIds = [];
+function pickDailyChallenges(){
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  const ids = [];
+  for(let i=0;i<3;i++){ ids.push(CHALLENGE_POOL[(dayOfYear+i) % CHALLENGE_POOL.length].id); }
+  return [...new Set(ids)];
+}
+let challengeCelebratedToday = false;
+function renderChallenges(){
+  const key = todayKey();
+  const list = document.getElementById('challengeList');
+  if(!list) return;
+  const challenges = dailyChallengeIds.map(id=> CHALLENGE_POOL.find(c=>c.id===id)).filter(Boolean);
+  let doneCount = 0;
+  list.innerHTML = challenges.map(c=>{
+    const done = c.check();
+    if(done) doneCount++;
+    return `<div class="challenge-item ${done?'done':''}">
+      <span class="chk">${done?'✓':''}</span>
+      <span class="challenge-text">${c.text}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('challengeProgressLabel').textContent = `${doneCount} / ${challenges.length} complete`;
+  if(doneCount===challenges.length && challenges.length>0 && !challengeCelebratedToday){
+    challengeCelebratedToday = true;
+    fireConfetti();
+  }
+}
+
+/* ================= AGENDA ================= */
+function renderAgenda(){
+  document.getElementById('agendaDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric'});
+  const content = document.getElementById('agendaContent');
+  const todayNamePersonal = currentWeekdayName();
+  const todayNameCollege = collegeWeekdayName(new Date());
+  let html = '';
+
+  const classes = collegePeriodsForDay(todayNameCollege);
+  html += `<div class="agenda-section"><h3>🏫 Classes</h3>`;
+  html += classes.length ? classes.map(c=>`<div class="agenda-row"><span class="agenda-time">${c.time}</span><span>${c.subject}</span></div>`).join('') : `<p class="hint">No classes today.</p>`;
+  html += `</div>`;
+
+  const blocks = blocksForWeekday(todayNamePersonal);
+  html += `<div class="agenda-section"><h3>📅 Schedule</h3>`;
+  html += blocks.length ? blocks.map(b=>`<div class="agenda-row"><span class="agenda-time">${b.time}</span><span>${b.text}</span></div>`).join('') : `<p class="hint">Nothing planned.</p>`;
+  html += `</div>`;
+
+  const dueTasks = tasks.filter(t=>!t.done && (!t.due || new Date(t.due) <= new Date()));
+  html += `<div class="agenda-section"><h3>✅ Tasks due</h3>`;
+  html += dueTasks.length ? dueTasks.map(t=>`<div class="agenda-row"><span>${t.text}</span></div>`).join('') : `<p class="hint">Nothing due.</p>`;
+  html += `</div>`;
+
+  const now = new Date(); now.setHours(0,0,0,0);
+  const soonExams = examListData.filter(ex=> Math.round((new Date(ex.date)-now)/86400000) <= 7 && Math.round((new Date(ex.date)-now)/86400000) >= 0);
+  html += `<div class="agenda-section"><h3>📝 Exams coming up</h3>`;
+  html += soonExams.length ? soonExams.map(ex=>`<div class="agenda-row"><span>${ex.subject} — ${ex.title} (${new Date(ex.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})})</span></div>`).join('') : `<p class="hint">Nothing within a week.</p>`;
+  html += `</div>`;
+
+  const meals = dietMealsForWeekday(todayNamePersonal);
+  html += `<div class="agenda-section"><h3>🥗 Meals</h3>`;
+  html += meals.length ? meals.map(m=>`<div class="agenda-row"><span class="agenda-time">${m.time}</span><span>${m.text}</span></div>`).join('') : `<p class="hint">No meals planned.</p>`;
+  html += `</div>`;
+
+  html += `<div class="agenda-section"><h3>🧴 Skincare</h3>`;
+  html += (skincareRoutine.AM.length||skincareRoutine.PM.length) ? `<div class="agenda-row"><span>${skincareRoutine.AM.length} AM steps · ${skincareRoutine.PM.length} PM steps</span></div>` : `<p class="hint">No routine set up yet.</p>`;
+  html += `</div>`;
+
+  content.innerHTML = html;
+}
+
+/* ================= YEAR IN REVIEW ================= */
+let lifetimeTasksCompleted = 0;
+function renderYearInReview(){
+  const totalMinutes = Object.values(activityLog).reduce((s,e)=>s+(e.studyMinutes||0),0);
+  const hours = Math.round(totalMinutes/60*10)/10;
+  const {done:roadmapDone} = totalRoadmapCounts();
+  let longestStreak = 0, cur = 0;
+  const dates = Object.keys(activityLog).sort();
+  dates.forEach(d=>{
+    const e = activityLog[d];
+    if(e.itemsCompleted>0 || e.studyMinutes>0){ cur++; longestStreak=Math.max(longestStreak,cur); }
+    else cur = 0;
+  });
+  const subjectsMastered = syllabusSubjects.filter(s=>{
+    const total = getSyllabusItemCount(s); const checks = syllabusProgress[s.code]||[];
+    return total>0 && checks.filter(Boolean).length===total;
+  }).length;
+
+  document.getElementById('reviewStatGrid').innerHTML = `
+    <div class="review-stat"><div class="num">${hours}h</div><div class="label">Study Time</div></div>
+    <div class="review-stat"><div class="num">${lifetimeTasksCompleted}</div><div class="label">Tasks Done</div></div>
+    <div class="review-stat"><div class="num">${roadmapDone}</div><div class="label">Roadmap Items</div></div>
+    <div class="review-stat"><div class="num">${longestStreak}</div><div class="label">Longest Streak</div></div>
+    <div class="review-stat"><div class="num">${subjectsMastered}</div><div class="label">Subjects Mastered</div></div>
+    <div class="review-stat"><div class="num">Lv ${levelForXP(totalXP)}</div><div class="label">Level</div></div>
+  `;
+}
+document.getElementById('downloadReviewBtn').addEventListener('click', ()=>{
+  if(typeof html2canvas === 'undefined'){ alert('Image export library failed to load — check your connection and try again.'); return; }
+  html2canvas(document.getElementById('reviewCard'), {backgroundColor:null}).then(canvas=>{
+    const link = document.createElement('a');
+    link.download = `zenora-year-in-review-${todayKey()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+  });
+});
+
+/* ================= CORRELATION INSIGHT ================= */
+function renderCorrelationInsight(){
+  const el = document.getElementById('correlationInsight');
+  if(!el) return;
+  const dates = Object.keys(activityLog);
+  if(dates.length < 5){
+    el.textContent = 'Not enough data yet — keep logging study time and schedule adherence to unlock personalized insights.';
+    return;
+  }
+  let highSum=0, highCount=0, lowSum=0, lowCount=0;
+  dates.forEach(d=>{
+    const minutes = activityLog[d].studyMinutes || 0;
+    const pct = scheduleAdherenceForDate(new Date(d+'T00:00:00')).pct;
+    if(minutes>=60){ highSum+=pct; highCount++; } else { lowSum+=pct; lowCount++; }
+  });
+  if(highCount<2 || lowCount<2){
+    el.textContent = 'Keep logging a mix of high and low study days to unlock a personalized insight here.';
+    return;
+  }
+  const highAvg = Math.round(highSum/highCount), lowAvg = Math.round(lowSum/lowCount);
+  const diff = highAvg - lowAvg;
+  if(diff>0) el.textContent = `Your schedule adherence averages ${diff}% higher on days you log 60+ minutes of study (${highAvg}% vs ${lowAvg}%).`;
+  else if(diff<0) el.textContent = `Interesting — your schedule adherence is actually ${Math.abs(diff)}% higher on lighter study days (${lowAvg}% vs ${highAvg}%).`;
+  else el.textContent = `Your schedule adherence is about the same regardless of study time (${highAvg}%).`;
+}
+
+/* ================= COMMAND PALETTE ================= */
+const COMMANDS = [
+  {label:'Go to College Schedule', action:()=>{ document.querySelector('[data-tab="college"]').click(); }},
+  {label:'Go to My Schedule', action:()=>{ document.querySelector('[data-tab="personal"]').click(); }},
+  {label:'Go to Daily Tasks', action:()=>{ document.querySelector('[data-tab="tasks"]').click(); }},
+  {label:'Go to Skill Roadmap', action:()=>{ document.querySelector('[data-tab="roadmap"]').click(); }},
+  {label:'Go to Skincare', action:()=>{ document.querySelector('[data-tab="skincare"]').click(); }},
+  {label:'Go to Diet Plan', action:()=>{ document.querySelector('[data-tab="diet"]').click(); }},
+  {label:'Go to Agenda', action:()=>{ document.querySelector('[data-tab="agenda"]').click(); }},
+  {label:'Go to Achievements', action:()=>{ document.querySelector('[data-tab="achievements"]').click(); }},
+  {label:'Go to Friends', action:()=>{ document.querySelector('[data-tab="friends"]').click(); }},
+  {label:'Add a task', action:()=>{ document.querySelector('[data-tab="tasks"]').click(); setTimeout(()=>document.getElementById('taskInput').focus(),150); }},
+  {label:'Log study time', action:()=>{ document.querySelector('[data-tab="roadmap"]').click(); setTimeout(()=>{ activateSubtab('today'); document.getElementById('studyMinutesInput').focus(); },150); }},
+  {label:'Toggle theme', action:()=>{ document.getElementById('themeToggle').click(); }},
+  {label:'Export backup', action:()=>{ document.getElementById('exportBtn').click(); }},
+  {label:'Log out', action:()=>{ document.getElementById('logoutBtn').click(); }},
+];
+let cmdSelIndex = 0;
+function openCmdPalette(){
+  document.getElementById('cmdPalette').classList.add('show');
+  document.getElementById('cmdInput').value = '';
+  document.getElementById('cmdInput').focus();
+  renderCmdResults('');
+}
+function closeCmdPalette(){ document.getElementById('cmdPalette').classList.remove('show'); }
+function renderCmdResults(query){
+  const q = query.toLowerCase();
+  const filtered = COMMANDS.filter(c=>c.label.toLowerCase().includes(q));
+  cmdSelIndex = 0;
+  document.getElementById('cmdResults').innerHTML = filtered.map((c,i)=>
+    `<div class="cmd-item ${i===0?'sel':''}" data-idx="${i}">${c.label}</div>`).join('') || '<div class="cmd-item">No matches</div>';
+  document.getElementById('cmdResults').querySelectorAll('.cmd-item').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const idx = +el.dataset.idx;
+      if(filtered[idx]){ filtered[idx].action(); closeCmdPalette(); }
+    });
+  });
+  window._cmdFiltered = filtered;
+}
+document.getElementById('cmdPaletteBtn').addEventListener('click', openCmdPalette);
+document.getElementById('cmdInput').addEventListener('input', e=> renderCmdResults(e.target.value));
+document.getElementById('cmdInput').addEventListener('keydown', e=>{
+  const items = document.querySelectorAll('.cmd-item');
+  if(e.key==='Escape'){ closeCmdPalette(); }
+  else if(e.key==='ArrowDown'){ e.preventDefault(); cmdSelIndex=Math.min(cmdSelIndex+1, items.length-1); items.forEach((el,i)=>el.classList.toggle('sel', i===cmdSelIndex)); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); cmdSelIndex=Math.max(cmdSelIndex-1, 0); items.forEach((el,i)=>el.classList.toggle('sel', i===cmdSelIndex)); }
+  else if(e.key==='Enter'){ const f=window._cmdFiltered||[]; if(f[cmdSelIndex]){ f[cmdSelIndex].action(); closeCmdPalette(); } }
+});
+document.getElementById('cmdPalette').addEventListener('click', e=>{ if(e.target.id==='cmdPalette') closeCmdPalette(); });
+document.addEventListener('keydown', e=>{
+  if((e.metaKey||e.ctrlKey) && e.key==='k'){ e.preventDefault(); openCmdPalette(); }
+});
+
+/* ================= NOTIFICATIONS (best-effort, in-session only) ================= */
+function checkNotifications(){
+  if(!('Notification' in window)) return;
+  const overdueTasks = tasks.filter(t=>!t.done && t.due && new Date(t.due) < new Date());
+  const now = new Date(); now.setHours(0,0,0,0);
+  const soonExams = examListData.filter(ex=> Math.round((new Date(ex.date)-now)/86400000) <= 1 && Math.round((new Date(ex.date)-now)/86400000) >= 0);
+  if(overdueTasks.length===0 && soonExams.length===0) return;
+  const fire = ()=>{
+    let msg = '';
+    if(overdueTasks.length) msg += `${overdueTasks.length} overdue task${overdueTasks.length===1?'':'s'}. `;
+    if(soonExams.length) msg += `${soonExams.length} exam${soonExams.length===1?'':'s'} within a day.`;
+    new Notification('Zenora', {body: msg});
+  };
+  if(Notification.permission==='granted') fire();
+  else if(Notification.permission!=='denied'){
+    Notification.requestPermission().then(p=>{ if(p==='granted') fire(); });
+  }
+}
+
 /* ================= TASKS ================= */
 let tasks = [];
 function uid(){ return 't'+Date.now()+Math.random().toString(16).slice(2); }
@@ -1628,9 +3174,19 @@ function renderTasks(){
     cb.addEventListener('change', async (e)=>{
       const id = e.target.closest('.task-item').dataset.id;
       const t = tasks.find(x=>x.id===id);
+      const wasChecked = t.done;
       t.done = e.target.checked;
       t.completedAt = e.target.checked ? new Date().toISOString() : null;
       await saveData('tasks_v1', tasks);
+      if(e.target.checked && !wasChecked){
+        await awardXP(5);
+        popAnimate(e.target.closest('.task-item'));
+        lifetimeTasksCompleted++;
+        await saveData('lifetime_tasks_v1', lifetimeTasksCompleted);
+        checkAchievements();
+      } else if(!e.target.checked && wasChecked){
+        await awardXP(-5);
+      }
       renderTasks();
     });
   });
@@ -1885,6 +3441,8 @@ function renderRoadmap(){
           roadmapChecklist[t.id] = arr;
           await saveData('roadmap_checklist_v1', roadmapChecklist);
           await bumpItemsCompleted(e.target.checked && !wasChecked ? 1 : (!e.target.checked && wasChecked ? -1 : 0));
+          if(e.target.checked && !wasChecked){ await awardXP(3); popAnimate(e.target.closest('li')); checkAchievements(); }
+          else if(!e.target.checked && wasChecked){ await awardXP(-3); }
           renderRoadmap(); renderToday();
         });
       });
@@ -2099,6 +3657,8 @@ function renderSpotlight(){
     roadmapChecklist[spot.topic.id] = arr;
     await saveData('roadmap_checklist_v1', roadmapChecklist);
     await bumpItemsCompleted(e.target.checked ? 1 : -1);
+    await awardXP(e.target.checked ? 3 : -3);
+    if(e.target.checked) checkAchievements();
     renderToday(); renderRoadmap();
   });
 }
@@ -2119,6 +3679,12 @@ function renderToday(){
 
   const reward = rewardFor(streak);
   document.getElementById('rewardRow').innerHTML = `<span class="reward-chip">${reward.emoji}</span> ${reward.label} <span style="color:var(--muted);">— ${streak}-day streak reward</span>`;
+
+  renderXPBadge();
+  const level = levelForXP(totalXP);
+  const xpHint = document.getElementById('xpDetailHint');
+  if(xpHint) xpHint.textContent = `Level ${level} · ${totalXP} XP total · ${xpForLevel(level+1)-totalXP} XP to Level ${level+1}`;
+  renderChallenges();
 
   const todayMinutes = (activityLog[todayKey()] || {}).studyMinutes || 0;
   const input = document.getElementById('studyMinutesInput');
@@ -2203,6 +3769,8 @@ function renderWeeklyDigest(){
 
 function renderStats(){
   renderWeeklyDigest();
+  renderYearInReview();
+  renderCorrelationInsight();
 
   // ---- Schedule adherence ----
   document.getElementById('statScheduleStreak').textContent = computeScheduleStreak();
@@ -2318,7 +3886,9 @@ const ALL_STORAGE_KEYS = [
   'college_v1','personal_v1','tasks_v1','roadmap_phases_v1','roadmap_checklist_v1',
   'activity_log_v1','journey_start_v1','schedule_log_v1','attendance_log_v1','exam_list_v1',
   'theme_v1','roadmap_milestone_v1','tasks_last_reset_v1','syllabus_progress_v1','syllabus_subjects_v1',
-  'reference_notes_v1','staying_current_v1'
+  'reference_notes_v1','staying_current_v1',
+  'skincare_routine_v1','skincare_log_v1','skincare_products_v1','diet_plan_v1','diet_log_v1',
+  'xp_v1','achievements_v1','lifetime_tasks_v1','daily_challenge_v1'
 ];
 
 document.getElementById('exportBtn').addEventListener('click', async ()=>{
@@ -2364,7 +3934,14 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
 });
 document.getElementById('printBtn').addEventListener('click', ()=>{
   renderToday(); renderStats();
+  document.body.classList.add('print-roadmap');
   window.print();
+  setTimeout(()=> document.body.classList.remove('print-roadmap'), 500);
+});
+document.getElementById('printPlannerBtn').addEventListener('click', ()=>{
+  document.body.classList.add('print-planner');
+  window.print();
+  setTimeout(()=> document.body.classList.remove('print-planner'), 500);
 });
 
 /* ================= TABS ================= */
@@ -2374,6 +3951,10 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='agenda') renderAgenda();
+    if(btn.dataset.tab==='achievements') renderAchievements();
+    if(btn.dataset.tab==='friends') renderFriendsTab();
+    else if(collabUnsub){ closeCollabRoadmap(); }
   });
 });
 
@@ -2394,6 +3975,7 @@ document.querySelectorAll('[data-jump]').forEach(btn=>{
 
 /* ================= INIT ================= */
 async function initDashboard(){
+  await testFirebaseConnection();
   collegeData = await loadData('college_v1', {times:collegeTimesDefault, days:collegeDaysDefault, grid:collegeGridDefault});
   personalData = await loadData('personal_v1', personalRowsDefault);
   tasks = await loadData('tasks_v1', []);
@@ -2424,12 +4006,30 @@ async function initDashboard(){
     await saveData('tasks_last_reset_v1', tK);
   }
 
-  const savedTheme = await loadData('theme_v1', 'light');
+  const savedTheme = await loadData('theme_v1', 'dark');
   await applyTheme(savedTheme);
   syllabusProgress = await loadData('syllabus_progress_v1', {});
   syllabusSubjects = await loadData('syllabus_subjects_v1', []);
   referenceNotes = await loadData('reference_notes_v1', {weekendFocus:"", softSkills:"", notes:""});
   stayingCurrentLinks = await loadData('staying_current_v1', []);
+  skincareRoutine = await loadData('skincare_routine_v1', {AM:[], PM:[]});
+  skincareLog = await loadData('skincare_log_v1', {});
+  skincareProducts = await loadData('skincare_products_v1', []);
+  dietPlanData = await loadData('diet_plan_v1', null);
+  if(!dietPlanData){ dietPlanData = blankDietPlan(); await saveData('diet_plan_v1', dietPlanData); }
+  dietLog = await loadData('diet_log_v1', {});
+  totalXP = await loadData('xp_v1', 0);
+  unlockedAchievements = await loadData('achievements_v1', {});
+  lifetimeTasksCompleted = await loadData('lifetime_tasks_v1', 0);
+
+  const savedChallenge = await loadData('daily_challenge_v1', null);
+  if(savedChallenge && savedChallenge.date === todayKey()){
+    dailyChallengeIds = savedChallenge.ids;
+  } else {
+    dailyChallengeIds = pickDailyChallenges();
+    await saveData('daily_challenge_v1', {date: todayKey(), ids: dailyChallengeIds});
+  }
+  challengeCelebratedToday = false;
 
   renderCollege();
   renderAttendanceToday();
@@ -2443,6 +4043,18 @@ async function initDashboard(){
   renderRoadmap();
   renderToday();
   renderResourcesInto('resourcesContainer', null);
+  renderSkincareAll();
+  renderProductList();
+  renderDietTable();
+  renderDietChecklist();
+  renderXPBadge();
+  renderAchievements();
+  renderChallenges();
+  renderAgenda();
+  checkAchievements();
+  checkNotifications();
+  updateMyPublicProfile();
+  renderFriendsTab();
 }
 
 /* =================================================================
@@ -2668,6 +4280,8 @@ document.getElementById('newPasswordBtn').addEventListener('click', async ()=>{
 
 // ---- Logout ----
 document.getElementById('logoutBtn').addEventListener('click', ()=>{
+  if(collabUnsub){ collabUnsub(); collabUnsub = null; }
+  currentCollabRoadmapId = null; currentCollabDoc = null; currentCollabPhases = [];
   sessionStorage.removeItem(SESSION_KEY_NAME);
   vaultCryptoKey = null;
   vaultData = {};
