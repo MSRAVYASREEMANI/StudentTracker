@@ -1197,10 +1197,12 @@ function genId(prefix){ return prefix + '_' + Date.now().toString(36) + '_' + Ma
 const firebaseConfig = {
   apiKey: "AIzaSyBVlTPXyQx3w4NlUpuP5YVb1SbXBQNHmdc",
   authDomain: "student-tracker-b44af.firebaseapp.com",
+  databaseURL: "https://student-tracker-b44af-default-rtdb.firebaseio.com",
   projectId: "student-tracker-b44af",
   storageBucket: "student-tracker-b44af.firebasestorage.app",
   messagingSenderId: "1000116818047",
-  appId: "1:1000116818047:web:fd55b6a8e8a44411726f4a"
+  appId: "1:1000116818047:web:fd55b6a8e8a44411726f4a",
+  measurementId: "G-KBG4VVXG69"
 };
 let firebaseEnabled = false;
 let fdb = null;
